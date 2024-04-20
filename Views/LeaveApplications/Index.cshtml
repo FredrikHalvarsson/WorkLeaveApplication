@@ -1,0 +1,94 @@
+﻿@using System.Globalization
+@using LeaveApplicationApp.Utilities
+@model IEnumerable<LeaveApplicationApp.Models.LeaveApplication>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    Layout = "_SidebarLayout";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        @if (User.IsInRole(SD.Role_Admin))
+        {
+            <h2>Filter</h2>
+            <form asp-controller="LeaveApplications" asp-action="LeaveApplicationsByMonth" method="get">
+                <div class="form-group">
+                    <label for="year">Select Year:</label>
+                    <select class="form-control" id="year" name="year">
+                        @for (int year = DateTime.Now.Year; year >= 2020; year--)
+                        {
+                            <option value="@year">@year</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="month">Select Month:</label>
+                    <select class="form-control" id="month" name="month">
+                        @for (int month = 1; month <= 12; month++)
+                        {
+                            <option value="@month">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">View Leave Applications</button>
+            </form>
+        }
+    </div>
+    <div class="col-md-8">
+        <h1>Leave Applications</h1>
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.WorkLeaveType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ApplicationTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WorkLeaveType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Employee.FirstName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.LeaveApplicationId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.LeaveApplicationId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.LeaveApplicationId">Delete</a>
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+﻿@model List<LeaveApplicationApp.Models.Employee>
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+@{
+    Layout = "_SidebarLayout";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        <form asp-action="Search" method="get">
+            <div class="form-group">
+                <label for="searchString">Search by Name:</label>
+                <input type="text" class="form-control" id="searchString" name="searchString">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+    <div class="col-md-8">
+        <h1>Search Results</h1>
+        <p>
+            <a asp-action="Index">Back to List</a>
+        </p>
+        @if (Model != null && Model.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Birth Date</th>
+                        <th>Department</th>
+                        <th>Leave Applications</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var employee in Model)
+                    {
+                        <tr>
+                            <td>@employee.FirstName</td>
+                            <td>@employee.LastName</td>
+                            <td>@employee.BirthDate.ToShortDateString()</td>
+                            <td>@employee.Department?.DepartmentName</td>
+                            <td>
+                                @if (employee.LeaveApplications != null && employee.LeaveApplications.Any())
+                                {
+                                    <ul>
+                                        @foreach (var leaveApp in employee.LeaveApplications)
+                                        {
+                                            <li>@leaveApp.WorkLeaveType - @leaveApp.StartDate.ToShortDateString() to @leaveApp.EndDate.ToShortDateString()</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span>No leave applications</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No employees found for the search criteria.</p>
+        }
+    </div>
+</div>

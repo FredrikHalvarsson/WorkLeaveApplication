@@ -1,0 +1,72 @@
+﻿@using LeaveApplicationApp.Utilities
+@model IEnumerable<LeaveApplicationApp.Models.Employee>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    Layout = "_SidebarLayout";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        @if (User.IsInRole(SD.Role_Admin))
+        {
+        <form asp-action="Search" method="get">
+            <div class="form-group">
+                <label for="searchString">Search by Name:</label>
+                <input type="text" class="form-control" id="searchString" name="searchString">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        }
+    </div>
+    <div class="col-md-8">
+        <h1>Employees</h1>
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BirthDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Department)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BirthDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.EmployeeId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.EmployeeId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.EmployeeId">Delete</a>
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+</div>
